@@ -126,7 +126,7 @@ for line in Lines:
                 reg_array_BA_count += 1
 
 # create output file
-writefile = open("output..txt", "w")
+writefile = open("output.txt", "w")
 
 for line in Lines:
     match_reg_only_init = re.search(pattern_reg_only_init, line)
