@@ -1,0 +1,15 @@
+reg mgmtsoc_reset_re = 1'd0;
+
+	mgmtsoc_reset_re = csrbank0_reset0_re;
+
+always_comb begin
+	mgmtsoc_soc_rst = 1'd0;
+	if (mgmtsoc_reset_re) begin
+		mgmtsoc_soc_rst = mgmtsoc_reset_storage[0];
+	end
+end
+	mgmtsoc_reset_re <= csrbank0_reset0_re;
+	if (csrbank0_scratch0_re) begin
+		mgmtsoc_scratch_storage[31:0] <= csrbank0_scratch0_r;
+	end
+		mgmtsoc_reset_re <= 1'd0;

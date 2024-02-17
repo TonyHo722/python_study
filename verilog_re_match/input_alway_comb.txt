@@ -1,0 +1,10 @@
+always_comb begin
+	litespi_rx_demux_endpoint0_source_first = 1'd0;
+	case (litespi_rx_demux_sel)
+		1'd0: begin
+			litespi_rx_demux_endpoint0_source_first = litespi_rx_demux_sink_first;
+		end
+		1'd1: begin
+		end
+	endcase
+end
