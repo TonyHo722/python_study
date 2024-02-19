@@ -1,0 +1,2 @@
+python remove_multiple_drive.py
+cp output.txt mgmt_core.patrick.remove.v
