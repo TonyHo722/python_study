@@ -137,6 +137,12 @@ for line in Lines:
             #print(modify_line)
             writefile.write(modify_line)
             continue
+        elif reg_only_dict.get(s) == 0 :
+            modify_line = line.replace('reg', 'wire')
+            print(modify_line)
+            print("replace to wire only")
+            writefile.write(modify_line)
+            continue
 
     match_reg_array_init = re.search(pattern_reg_array_init, line)
     if match_reg_array_init:
@@ -147,6 +153,13 @@ for line in Lines:
             modify_line = "reg [" + x + ":" + y + "] " + s + ";\n"
             #print(modify_line)
             #print(f"reg [{x}:{y}] {s};")
+            writefile.write(modify_line)
+            continue
+        elif reg_array_dict.get(s) == 0 :
+            modify_line = line.replace('reg', 'wire')
+            print("line.replase = ", line.replace('reg', 'wire'))
+            print(modify_line)
+            print("replace to wire array")
             writefile.write(modify_line)
             continue
 
