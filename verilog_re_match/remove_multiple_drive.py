@@ -15,6 +15,9 @@ pattern_reg_array_NBA = r"^\s+(\w+)\[(\d+):(\d+)\] <="
 pattern_reg_only_BA  = r"^\s+(\w+) ="
 pattern_reg_onebit_BA = r"^\s+(\w+)\[(\d+)\] ="
 pattern_reg_array_BA = r"^\s+(\w+)\[(\d+):(\d+)\] ="
+pattern_exist_if = r"if"
+pattern_exist_NBA = r"<="
+pattern_exist_BA = r"="
 
 warning_count = 0
 reg_only_init_count = 0
@@ -54,11 +57,13 @@ for line in Lines:
                 reg_only_dict.update({s:1})
                 print(f"reg_only_dict s: {s} = 1, match_reg_only_NBA")
                 reg_only_NBA_count += 1
+                continue
         elif s in reg_array_dict :
             if reg_array_dict.get(s) == 0 :
                 reg_array_dict.update({s:1})
                 print(f"reg_array_dict s: {s} = 1, match_reg_only_NBA")
                 reg_array_NBA_count += 1
+                continue
 
     match_reg_onebit_NBA = re.search(pattern_reg_onebit_NBA, line)
     if match_reg_onebit_NBA:
@@ -66,11 +71,13 @@ for line in Lines:
         if s in reg_only_dict :
             warning_count += 1
             print("warning_detect : match_reg_onebit_NBA found in reg_only_dict, it should not happend!!!")
+            continue
         elif s in reg_array_dict :
             if reg_array_dict.get(s) == 0 :
                 reg_array_dict.update({s:1})
                 print(f"reg_array_dict s: {s} = 1, match_reg_onebit_NBA")
                 reg_array_NBA_count += 1
+                continue
 
     match_reg_array_NBA = re.search(pattern_reg_array_NBA, line)
     if match_reg_array_NBA:
@@ -80,6 +87,7 @@ for line in Lines:
                 reg_array_dict.update({s:1})
                 print(f"reg_array_dict s: {s} = 1, match_reg_array_NBA")
                 reg_array_NBA_count += 1
+                continue
 
     match_reg_only_BA = re.search(pattern_reg_only_BA, line)
     #if not match_reg_only_init and not match_reg_array_init:
@@ -90,11 +98,13 @@ for line in Lines:
                 reg_only_dict.update({s:1})
                 print(f"reg_only_dict s: {s} = 1, match_reg_only_BA")
                 reg_only_BA_count += 1
+                continue
         elif s in reg_array_dict :
             if reg_array_dict.get(s) == 0 :
                 reg_array_dict.update({s:1})
                 print(f"reg_array_dict s: {s} = 1, match_reg_only_BA")
                 reg_array_BA_count += 1
+                continue
 
     match_reg_onebit_BA = re.search(pattern_reg_onebit_BA, line)
     if match_reg_onebit_BA:
@@ -104,11 +114,13 @@ for line in Lines:
                 reg_only_dict.update({s:1})
                 print(f"reg_only_dict s: {s} = 1, match_reg_onebit_BA")
                 reg_only_BA_count += 1
+                continue
         elif s in reg_array_dict :
             if reg_array_dict.get(s) == 0 :
                 reg_array_dict.update({s:1})
                 print(f"reg_array_dict s: {s} = 1, match_reg_onebit_BA")
                 reg_array_BA_count += 1
+                continue
 
     match_reg_array_BA = re.search(pattern_reg_array_BA, line)
     if match_reg_array_BA:
@@ -119,11 +131,77 @@ for line in Lines:
                 reg_only_dict.update({s:1})
                 print(f"reg_only_dict s: {s} = 1, match_reg_array_BA")
                 reg_only_BA_count += 1
+                continue
         elif s in reg_array_dict :
             if reg_array_dict.get(s) == 0 :
                 reg_array_dict.update({s:1})
                 print(f"reg_array_dict s: {s} = 1, match_reg_array_BA")
                 reg_array_BA_count += 1
+                continue
+
+    if re.search(pattern_exist_if, line) :
+        print(f"detect if statement, line = {line}")
+        continue
+
+    pattern_curly = r"{"
+    pattern_exist_reg_string = r"^\s+(\w+)"
+    #pattern_exist_reg = r"^\s+(\w+)\[(\d+):(\d+)\] <="
+    if re.search(pattern_exist_NBA, line) :
+        line_split = line.split("<=")
+        print(line_split)
+        if re.search(pattern_curly, line_split[0]) :
+            remove_left_curly_line = line_split[0].replace('{', ' ')
+            print(f"remove_left_curly_line = {remove_left_curly_line}")
+            remove_right_curly_line = remove_left_curly_line.replace('}', ' ')
+            print(f"remove_right_curly_line = {remove_right_curly_line}")
+            remove_curly_line_split = remove_right_curly_line.split(",")
+            print(remove_curly_line_split)
+            for target in remove_curly_line_split :
+                print(target)
+                match_reg_string = re.search(pattern_exist_reg_string, target)
+                s = match_reg_string.group(1)
+                if s in reg_only_dict :
+                    if reg_only_dict.get(s) == 0 :
+                        reg_only_dict.update({s:1})
+                        print(f"reg_only_dict s: {s} = 1, match_reg_array_in_curly in NBA")
+                        reg_only_BA_count += 1
+                        continue
+                elif s in reg_array_dict :
+                    if reg_array_dict.get(s) == 0 :
+                        reg_array_dict.update({s:1})
+                        print(f"reg_array_dict s: {s} = 1, match_reg_array_in_curly in NBA")
+                        reg_array_BA_count += 1
+                        continue
+
+
+
+
+    if re.search(pattern_exist_BA, line) :
+        line_split = line.split("=")
+        print(line_split)
+        if re.search(pattern_curly, line_split[0]) :
+            remove_left_curly_line = line_split[0].replace('{', ' ')
+            print(f"remove_left_curly_line = {remove_left_curly_line}")
+            remove_right_curly_line = remove_left_curly_line.replace('}', ' ')
+            print(f"remove_right_curly_line = {remove_right_curly_line}")
+            remove_curly_line_split = remove_right_curly_line.split(",")
+            print(remove_curly_line_split)
+            for target in remove_curly_line_split :
+                print(target)
+                match_reg_string = re.search(pattern_exist_reg_string, target)
+                s = match_reg_string.group(1)
+                if s in reg_only_dict :
+                    if reg_only_dict.get(s) == 0 :
+                        reg_only_dict.update({s:1})
+                        print(f"reg_only_dict s: {s} = 1, match_reg_array_in_curly in BA")
+                        reg_only_BA_count += 1
+                        continue
+                elif s in reg_array_dict :
+                    if reg_array_dict.get(s) == 0 :
+                        reg_array_dict.update({s:1})
+                        print(f"reg_array_dict s: {s} = 1, match_reg_array_in_curly in BA")
+                        reg_array_BA_count += 1
+                        continue
 
 # create output file
 writefile = open("output.txt", "w")
