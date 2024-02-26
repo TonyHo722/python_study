@@ -1,6 +1,19 @@
+#!/usr/bin/python3
+
 import re
+import argparse
+
+arg_parser = argparse.ArgumentParser( description = "Parsing source_file and modify it then write to target_file." )
+arg_parser.add_argument( "source_file" )
+arg_parser.add_argument( "target_file" )
+arguments = arg_parser.parse_args()
+
+SourceFile = arguments.source_file
+TargetFile = arguments.target_file
+print( "Modifying [{}] to [{}]".format(SourceFile, TargetFile) )
+
 # Open the file in read mode
-file = open("mgmt_core.patrick.v", "r")
+file = open(SourceFile, "r")
 #file = open("input.txt", "r")
 
 # Read the entire file content as a single string
@@ -204,7 +217,7 @@ for line in Lines:
                         continue
 
 # create output file
-writefile = open("output.txt", "w")
+writefile = open(TargetFile, "w")
 
 for line in Lines:
     match_reg_only_init = re.search(pattern_reg_only_init, line)

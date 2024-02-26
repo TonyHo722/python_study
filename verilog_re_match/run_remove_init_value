@@ -1,2 +1,2 @@
-python remove_multiple_drive.py
-cp output.txt mgmt_core.patrick.remove.v
+python remove_multiple_drive.py mgmt_core.patrick.v mgmt_core.patrick.remove.v
+
